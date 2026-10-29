@@ -1,0 +1,6 @@
+{
+  "name": "MindWell Practice Management",
+  "description": "Comprehensive clinic operations, appointment logging, scheduling, therapist calendar, client caseloads, and payment management for mental health organizations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

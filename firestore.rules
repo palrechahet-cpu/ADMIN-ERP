@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read, write: if isAuthenticated() && (request.auth.uid == userId);
+    }
+
+    // Workspaces
+    match /workspaces/{workspaceId} {
+      // Any authenticated user can read a workspace to verify access code / authorization
+      allow read: if isAuthenticated();
+
+      // Only authenticated users can create a workspace with themselves as creator
+      allow create: if isAuthenticated() && 
+        request.resource.data.creatorUid == request.auth.uid;
+
+      // Only the creator can update the workspace parameters and features
+      allow update: if isAuthenticated() && 
+        (resource.data.creatorUid == request.auth.uid || 
+         request.resource.data.creatorUid == request.auth.uid);
+
+      // Only creator can delete workspace
+      allow delete: if isAuthenticated() && resource.data.creatorUid == request.auth.uid;
+    }
+
+    // Default catch-all for workspace subcollections or clinic documents
+    match /{document=**} {
+      allow read, write: if isAuthenticated();
+    }
+  }
+}

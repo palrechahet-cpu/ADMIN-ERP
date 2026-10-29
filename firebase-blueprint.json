@@ -1,0 +1,48 @@
+{
+  "entities": {
+    "Workspace": {
+      "title": "Workspace",
+      "description": "Clinical practice organization workspace with feature toggles, creator ownership, access codes, and authorized team members",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "creatorUid": { "type": "string" },
+        "creatorEmail": { "type": "string" },
+        "accessCode": { "type": "string" },
+        "authorizedEmails": { "type": "array" },
+        "enabledFeatures": { "type": "object" },
+        "practiceType": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "creatorUid", "creatorEmail", "accessCode", "enabledFeatures"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with assigned workspace and membership role",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "workspaceId": { "type": "string" },
+        "role": { "type": "string", "enum": ["creator", "member"] },
+        "joinedAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "workspaceId", "role"]
+    }
+  },
+  "firestore": {
+    "/workspaces/{workspaceId}": {
+      "schema": "Workspace",
+      "description": "Clinical practice workspaces collection"
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profiles indexed by UID"
+    }
+  }
+}
